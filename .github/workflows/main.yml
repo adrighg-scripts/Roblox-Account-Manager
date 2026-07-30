@@ -21,11 +21,11 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore Packages
-      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory ../packages
+    - name: Restore Packages Exact Path
+      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory packages
 
     - name: Build Solution
-      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86"
+      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /p:RestorePackages=false
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
