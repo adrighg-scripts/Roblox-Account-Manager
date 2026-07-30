@@ -631,7 +631,22 @@ namespace RBX_Alt_Manager
             return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "/UC";
         }
 
-        private void AccountManager_Load(object sender, EventArgs e)
+            private void AccountManager_Load(object sender, EventArgs e)
+{
+    // ... hier steht der ganz normale Code, der schon vorher da war ...
+
+
+    // DEIN NEUER CODE (Ganz unten in der Methode):
+    try 
+    {
+        if (AccountControl.Instance == null || AccountControl.Instance.IsDisposed)
+        {
+            AccountControl control = new AccountControl();
+            control.Show();
+        }
+    }
+    catch { }
+}
         {
             PasswordPanel.Dock = DockStyle.Fill;
 
