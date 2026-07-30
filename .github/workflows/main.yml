@@ -21,32 +21,8 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore Packages
-      run: nuget restore "RBX Alt Manager.sln"
-
-    - name: Ultimate Path Fixer (Holzhammer)
-      shell: pwsh
-      run: |
-        Write-Host "Suche nach den versteckten NuGet-Paketen..."
-        $searchRoot = "D:\a\Roblox-Account-Manager"
-        $propsFile = Get-ChildItem -Path $searchRoot -Filter "CefSharp.Common.props" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-        
-        if ($propsFile) {
-            $realPackagesDir = $propsFile.Directory.Parent.Parent.FullName
-            Write-Host "Pakete gefunden in: $realPackagesDir"
-            
-            $dest1 = "${{ github.workspace }}\packages"
-            $dest2 = "${{ github.workspace }}\RBX Alt Manager\packages"
-            
-            if (!(Test-Path $dest1)) { New-Item -ItemType Directory -Path $dest1 | Out-Null }
-            if (!(Test-Path $dest2)) { New-Item -ItemType Directory -Path $dest2 | Out-Null }
-            
-            Write-Host "Kopiere Pakete direkt in das Sichtfeld von MSBuild..."
-            Copy-Item -Path "$realPackagesDir\*" -Destination $dest1 -Recurse -Force -ErrorAction SilentlyContinue
-            Copy-Item -Path "$realPackagesDir\*" -Destination $dest2 -Recurse -Force -ErrorAction SilentlyContinue
-        } else {
-            Write-Host "Kritischer Fehler: CefSharp wurde von NuGet gar nicht erst entpackt!"
-        }
+    - name: Force Install Packages
+      run: nuget install "RBX Alt Manager\packages.config" -OutputDirectory "packages"
 
     - name: Build Solution
       run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86"
