@@ -26,8 +26,8 @@ jobs:
       run: |
         $csprojPath = "RBX Alt Manager/RBX Alt Manager.csproj"
         $content = Get-Content -Path $csprojPath -Raw
-        # Ersetzt die harten relativen Pfade im Projekt durch den absoluten Workspace-Pfad
-        $newContent = $content -replace '\.\.\\packages\\', '$('${{ github.workspace }}\packages\')'
+        $workspace = "${{ github.workspace }}" -replace '\\', '\\'
+        $newContent = $content -replace '\.\.\\packages\\', "$workspace\\packages\\"
         Set-Content -Path $csprojPath -Value $newContent -Encoding UTF8
 
     - name: Restore Packages
