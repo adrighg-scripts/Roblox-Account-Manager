@@ -22,7 +22,16 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Restore Packages
-      run: nuget restore "RBX Alt Manager.sln" -SolutionDirectory .
+      run: nuget restore "RBX Alt Manager.sln"
+
+    - name: Fix Package Paths
+      shell: powershell
+      run: |
+        $target = "${{ github.workspace }}\packages"
+        if (-not (Test-Path $target)) { New-Item -ItemType Directory -Path $target }
+        Get-ChildItem -Path "${env:USERPROFILE}\.nuget\packages" -ErrorAction SilentlyContinue | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination $target -Recurse -Force -ErrorAction SilentlyContinue
+        }
 
     - name: Build Solution
       run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86"
