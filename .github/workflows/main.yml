@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "master", "main" ]
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -11,11 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore NuGet Packages via MSBuild
-      run: msbuild "RBX Alt Manager.sln" /t:Restore /p:Configuration=Release /p:Platform="x86"
+    - name: Restore Packages to packages folder
+      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory packages
 
     - name: Build Solution
       run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86"
@@ -24,4 +31,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: RBX-Alt-Manager-Modified
-        path: '**/bin/x86/Release/'
+        path: |
+          **/bin/x86/Release/
+          **/bin/Release/
