@@ -21,8 +21,10 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore Packages
-      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory "${{ github.workspace }}\packages"
+    - name: Restore Packages (Solution & Project)
+      run: |
+        nuget restore "RBX Alt Manager.sln" -PackagesDirectory "packages"
+        nuget restore "RBX Alt Manager/RBX Alt Manager.csproj" -PackagesDirectory "packages"
 
     - name: Build Solution
       run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /p:RestorePackages=false
