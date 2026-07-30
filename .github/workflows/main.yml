@@ -21,8 +21,8 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore Packages Exact Path
-      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory packages
+    - name: Restore Packages
+      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory "RBX Alt Manager/packages"
 
     - name: Build Solution
       run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /p:RestorePackages=false
