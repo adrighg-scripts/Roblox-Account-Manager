@@ -21,13 +21,14 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Restore Packages (Solution & Project)
-      run: |
-        nuget restore "RBX Alt Manager.sln" -PackagesDirectory "packages"
-        nuget restore "RBX Alt Manager/RBX Alt Manager.csproj" -PackagesDirectory "packages"
+    - name: Restore Packages via NuGet CLI
+      run: nuget restore "RBX Alt Manager.sln" -PackagesDirectory "../packages" -ConfigFile "RBX Alt Manager/packages.config"
+
+    - name: Fallback Restore via MSBuild
+      run: msbuild "RBX Alt Manager.sln" -restore /p:Configuration=Release /p:Platform="x86"
 
     - name: Build Solution
-      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /p:RestorePackages=false
+      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
