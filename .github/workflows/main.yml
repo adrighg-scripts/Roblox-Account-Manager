@@ -15,11 +15,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v3
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Build Solution with Automatic Restore
-      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /restore
+    - name: Restore Packages to Project Directory
+      run: nuget restore "RBX Alt Manager/RBX Alt Manager.csproj" -PackagesDirectory "RBX Alt Manager/packages"
+
+    - name: Build Solution
+      run: msbuild "RBX Alt Manager.sln" /p:Configuration=Release /p:Platform="x86" /p:RestorePackages=false
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
